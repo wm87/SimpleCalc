@@ -1,0 +1,36 @@
+/* Grundstil für die Tabelle */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Stil für Tabellenzellen */
+th,
+td {
+    border: 1px solid #f4eaea;
+    padding: 8px;
+    text-align: center;
+}
+
+/* Stil für Tabellenüberschriften */
+th {
+    background-color: #e9c56c;
+}
+
+/* Alternierende Zeilenfarben */
+tbody tr:nth-child(odd) {
+    background-color: #c1beb8;
+    /* Hellgrau für ungerade Zeilen */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #d7dbba;
+    /* Weiß für gerade Zeilen */
+}
+
+/* Stil für die Überschrift */
+h1 {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+}
