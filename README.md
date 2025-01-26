@@ -166,7 +166,9 @@ Insgesamt erleichtern jQuery-Selektoren das Arbeiten mit dem DOM erheblich und b
 // => robusterer JavaScript-Code
 "use strict";
 
-// $(document).ready(..) ist aus jQuery und stellt sicher, das der nachfolgende JS-Code erst ausgeführt wird, nachdem die gesamte HTML-Seite geladen wurde
+// $(document).ready(..) ist aus jQuery und stellt sicher, 
+// das der nachfolgende JS-Code erst ausgeführt wird, 
+// nachdem die gesamte HTML-Seite geladen wurde
 $(document).ready(function () {
   let rowCount = 2;
 
@@ -183,7 +185,9 @@ $(document).ready(function () {
     const row = $(`
       <tr>
         <th scope="row">${rowCount}</th>
-        <td><input type="text" class="form-control" id="number-${rowCount}" value="" placeholder="Zahl ${rowCount}"/></td>
+        <td>
+          <input type="text" class="form-control" id="number-${rowCount}" placeholder="Zahl ${rowCount} eintragen" />
+        </td>
       </tr>
     `);
 
@@ -191,7 +195,7 @@ $(document).ready(function () {
   });
 
   deleteRowBtn.on("click", function () {
-    let rows = $("#data-table tbody tr");
+    const rows = $("#data-table tbody tr");
     if (rows.length > 2) {
       rows.last().remove();
     }
@@ -204,29 +208,26 @@ $(document).ready(function () {
         $(this).remove();
       }
     });
+    // $("#data-table tbody tr").slice(2).remove();
 
     $("#data-table tbody input[type='text']").each(function () {
-
-      $(this).val("");
-      $(this).css("background-color", "");
-      resultField.val("");
-      resultField.css("background-color", "");
-      $("#selectedOperation").val(1);
+      $(this).val("").css("border-color", "");
     });
+
+    resultField.val("").css("border-color", "");
+    $("#selectedOperation").val(1);
+    rowCount = 2;
   });
 
   calcBtn.on("click", function () {
 
-    resultField.css("background-color", "");
-
     let values = [];
 
     if (checkValues(values) && values.length > 1) {
-      console.log("Values are valid: " + values);
       calcResult(values);
     }
     else {
-      console.log("Values are invalid: " + values.length);
+      resultField.val("Ungültige Eingabe(n)").css("border-color", "red");
     }
   });
 
@@ -235,14 +236,13 @@ $(document).ready(function () {
     let isValid = true;
 
     $("#data-table tbody input[type='text']").each(function () {
-      if ($.isNumeric($(this).val())) {
-        $(this).css("background-color", "");
-        values.push($(this).val());
+      const value = $(this).val().trim();
+      if ($.isNumeric(value)) {
+        $(this).css("border-color", "");
+        values.push(value);
       }
       else {
-        $(this).css("background-color", "red");
-        resultField.css("background-color", "red");
-        resultField.val("Ungültige Eingabe");
+        $(this).css("border-color", "red");
         isValid = false;
       }
     });
@@ -256,40 +256,37 @@ $(document).ready(function () {
 
   function calcResult(values) {
 
-    let result = 0;
-    let selectedValue = $("#selectedOperation").val();
+    let result = parseFloat(values[0]);
+    const selectedValue = $("#selectedOperation").val();
+    resultField.css("border-color", "");
 
     switch (selectedValue) {
       case '2':
-        result = parseFloat(values[0]);
         for (let i = 1; i < values.length; i++) {
           result += parseFloat(values[i]);
         }
         break;
       case '3':
-        result = parseFloat(values[0]);
         for (let i = 1; i < values.length; i++) {
           result -= parseFloat(values[i]);
         }
         break;
       case '4':
-        result = parseFloat(values[0]);
         for (let i = 1; i < values.length; i++) {
           result *= parseFloat(values[i]);
         }
         break;
       case '5':
-        result = parseFloat(values[0]);
         for (let i = 1; i < values.length; i++) {
           result /= parseFloat(values[i]);
         }
         break;
       default:
         result = "Operation wählen";
+        resultField.css("border-color", "red");
     }
 
-    resultField.css("background-color", "");
-    resultField.val(result); // Setzt das Ergebnis
+    resultField.val(result);
   }
 });
 ```
