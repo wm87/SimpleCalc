@@ -16,7 +16,7 @@ $(document).ready(function () {
   let tableBody = $("#data-table tbody");
   let resultField = $("#result");
 
-  addRowBtn.click(function () {
+  addRowBtn.on("click", function () {
     rowCount++;
 
     const row = $(`
@@ -29,14 +29,14 @@ $(document).ready(function () {
     tableBody.append(row);
   });
 
-  deleteRowBtn.click(function () {
+  deleteRowBtn.on("click", function () {
     let rows = $("#data-table tbody tr");
     if (rows.length > 2) {
       rows.last().remove();
     }
   });
 
-  clearBtn.click(function () {
+  clearBtn.on("click", function () {
 
     $("#data-table tbody tr").each(function (index) {
       if (index >= 2) {
@@ -54,7 +54,7 @@ $(document).ready(function () {
     });
   });
 
-  calcBtn.click(function () {
+  calcBtn.on("click", function () {
 
     resultField.css("background-color", "");
 

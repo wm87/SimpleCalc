@@ -177,7 +177,7 @@ $(document).ready(function () {
   let tableBody = $("#data-table tbody");
   let resultField = $("#result");
 
-  addRowBtn.click(function () {
+  addRowBtn.on("click", function () {
     rowCount++;
 
     const row = $(`
@@ -190,14 +190,14 @@ $(document).ready(function () {
     tableBody.append(row);
   });
 
-  deleteRowBtn.click(function () {
+  deleteRowBtn.on("click", function () {
     let rows = $("#data-table tbody tr");
     if (rows.length > 2) {
       rows.last().remove();
     }
   });
 
-  clearBtn.click(function () {
+  clearBtn.on("click", function () {
 
     $("#data-table tbody tr").each(function (index) {
       if (index >= 2) {
@@ -215,15 +215,18 @@ $(document).ready(function () {
     });
   });
 
-  calcBtn.click(function () {
+  calcBtn.on("click", function () {
 
     resultField.css("background-color", "");
 
     let values = [];
 
-    if (checkValues(values)) {
-      console.log("Values are valid");
+    if (checkValues(values) && values.length > 1) {
+      console.log("Values are valid: " + values);
       calcResult(values);
+    }
+    else {
+      console.log("Values are invalid: " + values.length);
     }
   });
 
@@ -240,10 +243,13 @@ $(document).ready(function () {
         $(this).css("background-color", "red");
         resultField.css("background-color", "red");
         resultField.val("Ungültige Eingabe");
-        values.length = 0;
         isValid = false;
       }
     });
+
+    if (!isValid) {
+      values.length = 0; // Clear the array without changing the reference
+    }
 
     return isValid;
   }
@@ -320,6 +326,35 @@ console.log(color);
 // CSS-Eigenschaft "color" eines Elements mit der ID "myElement" setzen
 $('#myElement').css('color', 'blue');
 ```
+
+***
+
+
+This page describes the click event. For the deprecated .click() method, see .click().
+https://api.jquery.com/click/
+
+## Veraltete Methode:
+```Javascript
+$("#element").click(function() {
+  // Event-Handler
+});
+```
+
+## Moderne Methode mit on:
+```Javascript
+$("#element").on("click", function() {
+  // Event-Handler
+});
+```
+
+Ein Vorteil von on ist, dass du damit mehrere Ereignisse in einem einzigen Aufruf behandeln kannst:
+
+```Javascript
+$("#element").on("click mouseenter", function() {
+  // Event-Handler für Klick und Mauszeiger
+});
+```
+
 
 ***
 
