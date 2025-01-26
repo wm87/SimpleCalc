@@ -51,6 +51,7 @@ $(document).ready(function () {
       resultField.val("");
       resultField.css("background-color", "");
       $("#selectedOperation").val(1);
+      rowCount = 2;
     });
   });
 
