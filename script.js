@@ -60,9 +60,12 @@ $(document).ready(function () {
 
     let values = [];
 
-    if (checkValues(values)) {
-      console.log("Values are valid");
+    if (checkValues(values) && values.length > 1) {
+      console.log("Values are valid: " + values);
       calcResult(values);
+    }
+    else {
+      console.log("Values are invalid: " + values.length);
     }
   });
 
@@ -79,10 +82,13 @@ $(document).ready(function () {
         $(this).css("background-color", "red");
         resultField.css("background-color", "red");
         resultField.val("Ungültige Eingabe");
-        values.length = 0;
         isValid = false;
       }
     });
+
+    if (!isValid) {
+      values.length = 0; // Clear the array without changing the reference
+    }
 
     return isValid;
   }
