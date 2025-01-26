@@ -47,9 +47,9 @@ $(document).ready(function () {
     $("#data-table tbody input[type='text']").each(function () {
 
       $(this).val("");
-      $(this).css("background-color", "");
+      $(this).css("border-color", "");
       resultField.val("");
-      resultField.css("background-color", "");
+      resultField.css("border-color", "");
       $("#selectedOperation").val(1);
       rowCount = 2;
     });
@@ -57,7 +57,7 @@ $(document).ready(function () {
 
   calcBtn.on("click", function () {
 
-    resultField.css("background-color", "");
+    resultField.css("border-color", "");
 
     let values = [];
 
@@ -76,12 +76,12 @@ $(document).ready(function () {
 
     $("#data-table tbody input[type='text']").each(function () {
       if ($.isNumeric($(this).val())) {
-        $(this).css("background-color", "");
+        $(this).css("border-color", "");
         values.push($(this).val());
       }
       else {
-        $(this).css("background-color", "red");
-        resultField.css("background-color", "red");
+        $(this).css("border-color", "red");
+        resultField.css("border-color", "red");
         resultField.val("Ungültige Eingabe");
         isValid = false;
       }
@@ -98,6 +98,7 @@ $(document).ready(function () {
 
     let result = 0;
     let selectedValue = $("#selectedOperation").val();
+    resultField.css("border-color", "");
 
     switch (selectedValue) {
       case '2':
@@ -126,9 +127,9 @@ $(document).ready(function () {
         break;
       default:
         result = "Operation wählen";
+        resultField.css("border-color", "red");
     }
 
-    resultField.css("background-color", "");
     resultField.val(result); // Setzt das Ergebnis
   }
 });
