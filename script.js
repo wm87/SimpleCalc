@@ -25,6 +25,15 @@ $(document).ready(function () {
       <tr>
         <th scope="row">${rowCount}</th>
         <td>
+          <select id="selectedOperation-${rowCount}" class="form-select" aria-label="Operator">
+            <option value="1" selected="selected">Bitte wählen</option>
+            <option value="2">+</option>
+            <option value="3">-</option>
+            <option value="4">*</option>
+            <option value="5">/</option>
+          </select>
+        </td>
+        <td>
           <input type="text" class="form-control" id="number-${rowCount}" placeholder="Zahl ${rowCount} eintragen" />
         </td>
       </tr>
@@ -54,7 +63,7 @@ $(document).ready(function () {
     });
 
     resultField.val("").css("border-color", "");
-    $("#selectedOperation").val(1);
+    $('select').val('1').css("border-color", "");
     rowCount = 2;
   });
 
@@ -86,6 +95,17 @@ $(document).ready(function () {
       }
     });
 
+    $("#data-table tbody select").each(function () {
+      const value = $(this).val();
+      if (value !== "1") {
+        $(this).css("border-color", "");
+      }
+      else {
+        $(this).css("border-color", "red");
+        isValid = false;
+      }
+    });
+
     if (!isValid) {
       values.length = 0; // Clear the array without changing the reference
     }
@@ -96,34 +116,25 @@ $(document).ready(function () {
   function calcResult(values) {
 
     let result = parseFloat(values[0]);
-    const selectedValue = $("#selectedOperation").val();
     resultField.css("border-color", "");
 
-    switch (selectedValue) {
-      case '2':
-        for (let i = 1; i < values.length; i++) {
-          result += parseFloat(values[i]);
-        }
-        break;
-      case '3':
-        for (let i = 1; i < values.length; i++) {
-          result -= parseFloat(values[i]);
-        }
-        break;
-      case '4':
-        for (let i = 1; i < values.length; i++) {
-          result *= parseFloat(values[i]);
-        }
-        break;
-      case '5':
-        for (let i = 1; i < values.length; i++) {
-          result /= parseFloat(values[i]);
-        }
-        break;
-      default:
-        result = "Operation wählen";
-        resultField.css("border-color", "red");
-    }
+    $("#data-table tbody select").each(function (idx) {
+      const selectedValue = $(this).val();
+      switch (selectedValue) {
+        case '2':
+          result += parseFloat(values[idx + 1]);
+          break;
+        case '3':
+          result -= parseFloat(values[idx + 1]);
+          break;
+        case '4':
+          result *= parseFloat(values[idx + 1]);
+          break;
+        case '5':
+          result /= parseFloat(values[idx + 1]);
+          break;
+      }
+    });
 
     resultField.val(result);
   }
