@@ -1,13 +1,13 @@
 // The "use strict" directive was new in ECMAScript version 5
-// Verbietet Duplikate
-// write cleaner code, like preventing you from using undeclared variables
+// Prohibits duplicates
+// Helps write cleaner code, like preventing the use of undeclared variables
 // Strict mode changes previously accepted "bad syntax" into real errors
-// => robusterer JavaScript-Code
+// => more robust JavaScript code
 "use strict";
 
-// $(document).ready(..) ist aus jQuery und stellt sicher, 
-// das der nachfolgende JS-Code erst ausgeführt wird, 
-// nachdem die gesamte HTML-Seite geladen wurde
+// $(document).ready(..) is from jQuery and ensures 
+// the following JS code is executed only after 
+// the entire HTML page has loaded
 $(document).ready(function () {
 
   let rowCount = 2;
@@ -18,15 +18,16 @@ $(document).ready(function () {
   let tableBody = $("#data-table tbody");
   let resultField = $("#result");
 
+  // Adding a new row
   addRowBtn.on("click", function () {
     rowCount++;
 
-    const row = $(`
+    const row = $(` 
       <tr>
         <th scope="row">${rowCount}</th>
         <td>
           <select class="form-select operation" aria-label="Operator">
-            <option value="1" selected="selected">Bitte wählen</option>
+            <option value="1" selected="selected">Please select</option>
             <option value="2">+</option>
             <option value="3">-</option>
             <option value="4">*</option>
@@ -34,14 +35,16 @@ $(document).ready(function () {
           </select>
         </td>
         <td>
-          <input type="text" class="form-control" id="number-${rowCount}" placeholder="Zahl ${rowCount} eintragen" />
+          <input type="text" class="form-control" id="number-${rowCount}" placeholder="Enter number ${rowCount}" />
         </td>
       </tr>
     `);
 
+    // Append the new row to the end of the table
     tableBody.append(row);
   });
 
+  // Deleting the last row
   deleteRowBtn.on("click", function () {
     const rows = $("#data-table tbody tr");
     if (rows.length > 2) {
@@ -52,6 +55,7 @@ $(document).ready(function () {
 
   clearBtn.on("click", function () {
 
+    // Remove all rows except the first two
     $("#data-table tbody tr").each(function (index) {
       if (index >= 2) {
         $(this).remove();
@@ -59,31 +63,45 @@ $(document).ready(function () {
     });
     // $("#data-table tbody tr").slice(2).remove();
 
+    // Reset all input fields
     $("#data-table tbody input[type='text']").each(function () {
       $(this).val("").css("border-color", "");
     });
 
-    resultField.val("").css("border-color", "");
+    // Reset all select elements (operations)
     $('select').val('1').css("border-color", "");
+
+    // Reset the row numbering
     rowCount = 2;
+
+    // Reset the result field
+    resultField.val("").css("border-color", "");
   });
 
   calcBtn.on("click", function () {
 
     let numbers = [], operators = [];
 
+    // Check if all values are valid: numbers and 
+    // operators are selected and there are at least two numbers
     if (checkValues(numbers, operators) && numbers.length > 1) {
+
+      // Calculate the result
       calcResult(numbers, operators);
     }
   });
 
+  // Check input values to validate numbers and operators
   function checkValues(numbers, operators) {
 
     let isValid = true;
     resultField.val("").css("border-color", "");
 
+    // Check if all numbers are valid
     $("#data-table tbody input[type='text']").each(function () {
       const number = $(this).val().trim();
+
+      // Check if the input is a number
       if ($.isNumeric(number)) {
         $(this).css("border-color", "");
         numbers.push(parseFloat(number));
@@ -94,10 +112,15 @@ $(document).ready(function () {
       }
     });
 
+    // Check if all operators are valid
     $("#data-table tbody select").each(function () {
       const operator = $(this).val();
+      const selectedOperation = $(this).find("option:selected").text();
+
+      // Check if the operator is selected, but not the default value
       if (operator !== "1") {
         $(this).css("border-color", "");
+        operators.push(selectedOperation);
       }
       else {
         $(this).css("border-color", "red");
@@ -105,10 +128,12 @@ $(document).ready(function () {
       }
     });
 
+    // Check if there is a division by zero
     tableBody.find('tr').each(function () {
       let operator = $(this).find('select');
       let number = $(this).find('input');
 
+      // Check if the operator is division and the number is zero
       if (operator.val() === '5' && number.val() === '0') {
         operator.css("border-color", "red");
         number.css("border-color", "red");
@@ -117,26 +142,22 @@ $(document).ready(function () {
     });
 
     if (!isValid) {
-      numbers.length = 0; // Clear the array without changing the reference
-      resultField.val("Ungültige Eingabe(n)").css("border-color", "red");
-
+      numbers.length = 0;
+      resultField.val("Invalid input(s)").css("border-color", "red");
       return false;
     }
-
-    $('.operation').each(function () {
-      const selectedOperation = $(this).find("option:selected").text();
-      operators.push(selectedOperation);
-    });
 
     return true;
   }
 
+  // Calculate the result based on the input numbers and operators
   function calcResult(numbers, operators) {
 
     let tmpValue = 0;
     // let numbers = [2, 3, 1, 6, 1, 2];
     // let operators = ['*', '*', '+', '*', '*'];
 
+    // For multiplication and division
     for (let i = 0; i < operators.length; i++) {
 
       if (operators[i] === '*') {
@@ -155,6 +176,7 @@ $(document).ready(function () {
       }
     }
 
+    // For addition and subtraction
     for (let i = 0; i < operators.length; i++) {
 
       if (operators[i] === '+') {
@@ -173,9 +195,7 @@ $(document).ready(function () {
       }
     }
 
-    // console.log(numbers);
-    // console.log(operators);
-
+    // Display the result
     resultField.val(numbers);
   }
 });
