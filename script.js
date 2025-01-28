@@ -64,9 +64,7 @@ $(document).ready(function () {
     // $("#data-table tbody tr").slice(2).remove();
 
     // Reset all input fields
-    $("#data-table tbody input[type='text']").each(function () {
-      $(this).val("").css("border-color", "");
-    });
+    $("#data-table tbody input[type='text']").val("").css("border-color", "");
 
     // Reset all select elements (operations)
     $('select').val('1').css("border-color", "");
@@ -85,7 +83,6 @@ $(document).ready(function () {
     // Check if all values are valid: numbers and 
     // operators are selected and there are at least two numbers
     if (checkValues(numbers, operators) && numbers.length > 1) {
-
       // Calculate the result
       calcResult(numbers, operators);
     }
@@ -144,10 +141,9 @@ $(document).ready(function () {
     if (!isValid) {
       numbers.length = 0;
       resultField.val("Ungültige Eingabe(n)").css("border-color", "red");
-      return false;
     }
 
-    return true;
+    return isValid;
   }
 
   // Calculate the result based on the input numbers and operators
@@ -176,7 +172,6 @@ $(document).ready(function () {
       }
       else if (operators[i] === '/') {
         tmpValue = numbers[i] / numbers[i + 1];
-
         numbers.splice(i, 2, tmpValue);
         operators.splice(i, 1);
         i--;
@@ -202,7 +197,6 @@ $(document).ready(function () {
       }
       else if (operators[i] === '-') {
         tmpValue = numbers[i] - numbers[i + 1];
-
         numbers.splice(i, 2, tmpValue);
         operators.splice(i, 1);
         i--;
