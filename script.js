@@ -27,7 +27,7 @@ $(document).ready(function () {
         <th scope="row">${rowCount}</th>
         <td>
           <select class="form-select operation" aria-label="Operator">
-            <option value="1" selected="selected">Please select</option>
+            <option value="1" selected="selected">Bitte wählen</option>
             <option value="2">+</option>
             <option value="3">-</option>
             <option value="4">*</option>
@@ -35,7 +35,7 @@ $(document).ready(function () {
           </select>
         </td>
         <td>
-          <input type="text" class="form-control" id="number-${rowCount}" placeholder="Enter number ${rowCount}" />
+          <input type="text" class="form-control" id="number-${rowCount}" placeholder="Zahl ${rowCount} eintragen" />
         </td>
       </tr>
     `);
@@ -143,7 +143,7 @@ $(document).ready(function () {
 
     if (!isValid) {
       numbers.length = 0;
-      resultField.val("Invalid input(s)").css("border-color", "red");
+      resultField.val("Ungültige Eingabe(n)").css("border-color", "red");
       return false;
     }
 
@@ -157,14 +157,21 @@ $(document).ready(function () {
     // let numbers = [2, 3, 1, 6, 1, 2];
     // let operators = ['*', '*', '+', '*', '*'];
 
-    // For multiplication and division
+    // at first we calculate the multiplication and division because they have the highest priority
     for (let i = 0; i < operators.length; i++) {
 
       if (operators[i] === '*') {
+
+        // Calculate the product of the two numbers at the position i and i+1
         tmpValue = numbers[i] * numbers[i + 1];
 
+        // Remove the two numbers and replace them with the product
         numbers.splice(i, 2, tmpValue);
+
+        // Remove the operator at the current position
         operators.splice(i, 1);
+
+        // Decrement the index to check the next operator and number
         i--;
       }
       else if (operators[i] === '/') {
@@ -176,14 +183,21 @@ $(document).ready(function () {
       }
     }
 
-    // For addition and subtraction
+    // second we calculate the addition and subtraction because they have the lowest priority
     for (let i = 0; i < operators.length; i++) {
 
       if (operators[i] === '+') {
+
+        // Calculate the sum of the two numbers at the position i and i+1
         tmpValue = numbers[i] + numbers[i + 1];
 
+        // Remove the two numbers and replace them with the sum
         numbers.splice(i, 2, tmpValue);
+
+        // Remove the operator at the current position
         operators.splice(i, 1);
+
+        // Decrement the index to check the next operator and number
         i--;
       }
       else if (operators[i] === '-') {

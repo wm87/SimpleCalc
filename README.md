@@ -141,54 +141,68 @@ Schleifendurchläufe
 ### JS-Code
 
 ```Javascript
-  function calcResult(numbers, operators) {
+// Calculate the result based on the input numbers and operators
+function calcResult(numbers, operators) {
 
-    let tmpValue = 0;
-    // let numbers = [2, 3, 1, 6, 1, 2];
-    // let operators = ['*', '*', '+', '*', '*'];
+  let tmpValue = 0;
+  // let numbers = [2, 3, 1, 6, 1, 2];
+  // let operators = ['*', '*', '+', '*', '*'];
 
-    for (let i = 0; i < operators.length; i++) {
+  // at first we calculate the multiplication and division because they have the highest priority
+  for (let i = 0; i < operators.length; i++) {
 
-      if (operators[i] === '*') {
-        tmpValue = numbers[i] * numbers[i + 1];
+    if (operators[i] === '*') {
 
-        numbers.splice(i, 2, tmpValue);
-        operators.splice(i, 1);
-        i--;
-      }
-      else if (operators[i] === '/') {
-        tmpValue = numbers[i] / numbers[i + 1];
+      // Calculate the product of the two numbers at the position i and i+1
+      tmpValue = numbers[i] * numbers[i + 1];
 
-        numbers.splice(i, 2, tmpValue);
-        operators.splice(i, 1);
-        i--;
-      }
+      // Remove the two numbers and replace them with the product
+      numbers.splice(i, 2, tmpValue);
+
+      // Remove the operator at the current position
+      operators.splice(i, 1);
+
+      // Decrement the index to check the next operator and number
+      i--;
     }
+    else if (operators[i] === '/') {
+      tmpValue = numbers[i] / numbers[i + 1];
 
-    for (let i = 0; i < operators.length; i++) {
-
-      if (operators[i] === '+') {
-        tmpValue = numbers[i] + numbers[i + 1];
-
-        numbers.splice(i, 2, tmpValue);
-        operators.splice(i, 1);
-        i--;
-      }
-      else if (operators[i] === '-') {
-        tmpValue = numbers[i] - numbers[i + 1];
-
-        numbers.splice(i, 2, tmpValue);
-        operators.splice(i, 1);
-        i--;
-      }
+      numbers.splice(i, 2, tmpValue);
+      operators.splice(i, 1);
+      i--;
     }
-
-    console.log(numbers);
-    console.log(operators);
-
-    resultField.val(numbers).css("border-color", "");
   }
-});
+
+  // second we calculate the addition and subtraction because they have the lowest priority
+  for (let i = 0; i < operators.length; i++) {
+
+    if (operators[i] === '+') {
+
+      // Calculate the sum of the two numbers at the position i and i+1
+      tmpValue = numbers[i] + numbers[i + 1];
+
+      // Remove the two numbers and replace them with the sum
+      numbers.splice(i, 2, tmpValue);
+
+      // Remove the operator at the current position
+      operators.splice(i, 1);
+
+      // Decrement the index to check the next operator and number
+      i--;
+    }
+    else if (operators[i] === '-') {
+      tmpValue = numbers[i] - numbers[i + 1];
+
+      numbers.splice(i, 2, tmpValue);
+      operators.splice(i, 1);
+      i--;
+    }
+  }
+
+  // Display the result
+  resultField.val(numbers);
+}
 ```
 
 ## Werte abrufen und setzen
