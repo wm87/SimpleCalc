@@ -1,69 +1,11 @@
 🟥 Entwickle einen Taschenrechner auf einer HTML-Seite. 🟥
 
 
-# 1) Erstelle eine HTML-Seite mit:
+# 1) Erstelle eine HTML-Seite:
 > * `zwei Eingabefeldern für Zahlen`
 > * einem Auswahlfeld für die `Rechenoperation` (+,-,*,/)
 > * einem `Button für die Berechnung des Ergebnisses`
 > * Gib das `Ergebnis auf der Webseite` aus. Nutze dazu JavaScript.
-
-```HTML
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rechner</title>
-    <script>
-        function berechne() {
-            var zahl1 = parseFloat(document.getElementById('zahl1').value);
-            var zahl2 = parseFloat(document.getElementById('zahl2').value);
-            var operation = document.getElementById('operation').value;
-            var ergebnis;
-
-            if (isNaN(zahl1) || isNaN(zahl2)) {
-                ergebnis = 'Bitte geben Sie gültige Zahlen ein.';
-            } else {
-                switch(operation) {
-                    case '+':
-                        ergebnis = zahl1 + zahl2;
-                        break;
-                    case '-':
-                        ergebnis = zahl1 - zahl2;
-                        break;
-                    case '*':
-                        ergebnis = zahl1 * zahl2;
-                        break;
-                    case '/':
-                        ergebnis = zahl1 / zahl2;
-                        break;
-                    default:
-                        ergebnis = 'Ungültige Operation';
-                }
-            }
-            document.getElementById('ergebnis').innerText = 'Ergebnis: ' + ergebnis;
-        }
-    </script>
-</head>
-<body>
-    <h1>Einfacher Rechner</h1>
-    <label for="zahl1">Zahl 1:</label>
-    <input type="text" id="zahl1"><br><br>
-    <label for="zahl2">Zahl 2:</label>
-    <input type="text" id="zahl2"><br><br>
-    <label for="operation">Operation:</label>
-    <select id="operation">
-        <option value="+">+</option>
-        <option value="-">-</option>
-        <option value="*">*</option>
-        <option value="/">/</option>
-    </select><br><br>
-    <button onclick="berechne()">Berechnen</button>
-    <p id="ergebnis"></p>
-</body>
-</html>
-```
-
 
 
 ## Relevante Begriffe
@@ -71,17 +13,26 @@
 **HTML**
 - HyperText Markup Language
 - wird verwendet, um Dokumente zu erstellen und Informationen im Web zu strukturieren
-- besteht aus einer Reihe von Elementen, die verwendet werden, um verschiedene Teile eines Dokuments wie Texte, Bilder, Links, Listen und Formulare darzustellen/formatieren
+- HTML-Elemente teilen dem Browser mit, wie der Inhalt (Texte, Bilder, Links, Listen und Formulare) angezeigt werden soll
+- Ein HTML-Element wird durch ein Start-Tag, einige Inhalte und ein End-Tag definiert: `<h1>My First Heading</h1>`
+- https://www.w3schools.com/html/html_intro.asp
 
 **Ereignisse**
-- HTML und JavaScript werden Ereignisse verwendet, um auf Benutzeraktionen wie Mausklicks, Tastatureingaben oder das Laden einer Seite zu reagieren. Hier sind einige gängige Ereignisse:
+
+HTML und JavaScript werden Ereignisse verwendet, um auf Benutzeraktionen wie Mausklicks, Tastatureingaben oder das Laden einer Seite zu reagieren. Hier sind einige gängige Ereignisse:
+
+HTML
   - `onchange`: An HTML element has been changed
   - `onclick`: The user clicks an HTML element
   - `onmouseover`: The user moves the mouse over an HTML element
   - `onmouseout`: The user moves the mouse away from an HTML element
   - `onkeydown`: The user pushes a keyboard key
   - `onload`: The browser has finished loading the page
-  - weiteres: https://www.w3schools.com/js/js_events.asp
+  - https://www.w3schools.com/js/js_events.asp
+
+jQuery
+  - `.click()`, `.dblclick()`, `.hover()` ...
+  - https://api.jquery.com/category/events/
 
 In HTML onclick is the event listener, myFunction is the event handler:
 ```HTML
@@ -90,7 +41,12 @@ In HTML onclick is the event listener, myFunction is the event handler:
 
 In JavaScript click is the event, myFunction is the event handler:
 ```Javascript
-button.addEventListener("click", myFunction);
+document.getElementById("myButton").addEventListener("click", myFunction);
+```
+
+In jQuery click is the event, function () is the event handler:
+```Javascript
+$("#add-row").("click", function () { ... });
 ```
 
 **DocumentObjectModel (DOM)**
@@ -109,7 +65,7 @@ button.addEventListener("click", myFunction);
 
 ***
 
-# 2) Nutze jQuery und passe Schritt 1 an, sodass:
+# 2) Nutze jQuery und passe Schritt 1 an:
 > * das „Click“ Ereignis über jQuery angebunden wird
 > * das Auslesen der Werte über jQuery realisiert ist
 > *  die Ausgabe des Ergebnisses per jQuery realisiert ist
@@ -152,146 +108,90 @@ Insgesamt erleichtern jQuery-Selektoren das Arbeiten mit dem DOM erheblich und b
 
 ***
 
-# 3) Erweitere Schritt 2, sodass:
+# 3) Erweitere Schritt 2:
 > * die Eingabefelder für die Zahlen in einer Tabellenzeile stehen
 > * erstelle einen Button, mit dem weitere Zeilen + Eingabefeld zu der Tabelle hinzugefügt werden können
 > * Passe die Berechnung des Ergebnisses so an, dass beliebig viele Eingabefelder mit der ausgewählten Rechenoperation berechnet werden, nutze dazu jQuery Selektoren.
 
-`JS-Code`
+
+## Punktrechnung vor Strichrechnung
+
+### HOW-TO
+
+-	Eingabe: Zwei Listen (numbers und operators).
+Schleifendurchläufe
+-	Berechnet das Ergebnis einer Folge von Zahlen und Operatoren.
+
+`1.	Erster Durchlauf: Multiplikation und Division`
+
+-	Durchlaufe operators und suche nach * oder /
+-	Multipliziere oder dividiere die entsprechenden Zahlen in numbers
+-	Ersetze die beiden Zahlen durch das Ergebnis der Operation
+-	Entferne den verwendeten Operator aus operators
+- setze Zählvariable `i` um eins (`i--`) zurück, sonst wird der nächste Wert wegen `i++` in den Listen übersprungen
+
+`2.	Zweiter Durchlauf: Addition und Subtraktion`
+
+-	Durchlaufe operators erneut, diesmal für + oder -
+-	Addiere oder subtrahiere die entsprechenden Zahlen in numbers
+-	Ersetze die beiden Zahlen durch das Ergebnis der Operation
+-	Entferne den verwendeten Operator aus operators
+- setze Zählvariable `i` um eins (`i--`) zurück, sonst wird der nächste Wert wegen `i++` in den Listen übersprungen
+
+### JS-Code
+
 ```Javascript
-// The "use strict" directive was new in ECMAScript version 5
-// Verbietet Duplikate
-// write cleaner code, like preventing you from using undeclared variables
-// Strict mode changes previously accepted "bad syntax" into real errors
-// => robusterer JavaScript-Code
-"use strict";
+  function calcResult(numbers, operators) {
 
-// $(document).ready(..) ist aus jQuery und stellt sicher, 
-// das der nachfolgende JS-Code erst ausgeführt wird, 
-// nachdem die gesamte HTML-Seite geladen wurde
-$(document).ready(function () {
-  let rowCount = 2;
+    let tmpValue = 0;
+    // let numbers = [2, 3, 1, 6, 1, 2];
+    // let operators = ['*', '*', '+', '*', '*'];
 
-  const clearBtn = $("#clear-rows");
-  const calcBtn = $("#calcResult");
-  const addRowBtn = $("#add-row");
-  const deleteRowBtn = $("#delete-row");
-  let tableBody = $("#data-table tbody");
-  let resultField = $("#result");
+    for (let i = 0; i < operators.length; i++) {
 
-  addRowBtn.on("click", function () {
-    rowCount++;
+      if (operators[i] === '*') {
+        tmpValue = numbers[i] * numbers[i + 1];
 
-    const row = $(`
-      <tr>
-        <th scope="row">${rowCount}</th>
-        <td>
-          <input type="text" class="form-control" id="number-${rowCount}" placeholder="Zahl ${rowCount} eintragen" />
-        </td>
-      </tr>
-    `);
-
-    tableBody.append(row);
-  });
-
-  deleteRowBtn.on("click", function () {
-    const rows = $("#data-table tbody tr");
-    if (rows.length > 2) {
-      rows.last().remove();
-    }
-  });
-
-  clearBtn.on("click", function () {
-
-    $("#data-table tbody tr").each(function (index) {
-      if (index >= 2) {
-        $(this).remove();
+        numbers.splice(i, 2, tmpValue);
+        operators.splice(i, 1);
+        i--;
       }
-    });
-    // $("#data-table tbody tr").slice(2).remove();
+      else if (operators[i] === '/') {
+        tmpValue = numbers[i] / numbers[i + 1];
 
-    $("#data-table tbody input[type='text']").each(function () {
-      $(this).val("").css("border-color", "");
-    });
-
-    resultField.val("").css("border-color", "");
-    $("#selectedOperation").val(1);
-    rowCount = 2;
-  });
-
-  calcBtn.on("click", function () {
-
-    let values = [];
-
-    if (checkValues(values) && values.length > 1) {
-      calcResult(values);
-    }
-    else {
-      resultField.val("Ungültige Eingabe(n)").css("border-color", "red");
-    }
-  });
-
-  function checkValues(values) {
-
-    let isValid = true;
-
-    $("#data-table tbody input[type='text']").each(function () {
-      const value = $(this).val().trim();
-      if ($.isNumeric(value)) {
-        $(this).css("border-color", "");
-        values.push(value);
+        numbers.splice(i, 2, tmpValue);
+        operators.splice(i, 1);
+        i--;
       }
-      else {
-        $(this).css("border-color", "red");
-        isValid = false;
+    }
+
+    for (let i = 0; i < operators.length; i++) {
+
+      if (operators[i] === '+') {
+        tmpValue = numbers[i] + numbers[i + 1];
+
+        numbers.splice(i, 2, tmpValue);
+        operators.splice(i, 1);
+        i--;
       }
-    });
+      else if (operators[i] === '-') {
+        tmpValue = numbers[i] - numbers[i + 1];
 
-    if (!isValid) {
-      values.length = 0; // Clear the array without changing the reference
+        numbers.splice(i, 2, tmpValue);
+        operators.splice(i, 1);
+        i--;
+      }
     }
 
-    return isValid;
-  }
+    console.log(numbers);
+    console.log(operators);
 
-  function calcResult(values) {
-
-    let result = parseFloat(values[0]);
-    const selectedValue = $("#selectedOperation").val();
-    resultField.css("border-color", "");
-
-    switch (selectedValue) {
-      case '2':
-        for (let i = 1; i < values.length; i++) {
-          result += parseFloat(values[i]);
-        }
-        break;
-      case '3':
-        for (let i = 1; i < values.length; i++) {
-          result -= parseFloat(values[i]);
-        }
-        break;
-      case '4':
-        for (let i = 1; i < values.length; i++) {
-          result *= parseFloat(values[i]);
-        }
-        break;
-      case '5':
-        for (let i = 1; i < values.length; i++) {
-          result /= parseFloat(values[i]);
-        }
-        break;
-      default:
-        result = "Operation wählen";
-        resultField.css("border-color", "red");
-    }
-
-    resultField.val(result);
+    resultField.val(numbers).css("border-color", "");
   }
 });
 ```
 
-
+## Werte abrufen und setzen
 .text(): Diese Methode wird verwendet, um den Textinhalt eines Elements zu bekommen oder zu setzen.
 
 ```Javascript
@@ -326,18 +226,18 @@ $('#myElement').css('color', 'blue');
 
 ***
 
+## Veraltete Methode
 
-This page describes the click event. For the deprecated .click() method, see .click().
-https://api.jquery.com/click/
-
-## Veraltete Methode:
 ```Javascript
 $("#element").click(function() {
   // Event-Handler
 });
 ```
+This page describes the click event. For the deprecated .click() method, see .click().
+https://api.jquery.com/click/
 
-## Moderne Methode mit on:
+## Moderne Methode mit on
+
 ```Javascript
 $("#element").on("click", function() {
   // Event-Handler
@@ -351,7 +251,3 @@ $("#element").on("click mouseenter", function() {
   // Event-Handler für Klick und Mauszeiger
 });
 ```
-
-
-***
-
