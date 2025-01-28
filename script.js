@@ -9,8 +9,8 @@
 // das der nachfolgende JS-Code erst ausgeführt wird, 
 // nachdem die gesamte HTML-Seite geladen wurde
 $(document).ready(function () {
-  let rowCount = 2;
 
+  let rowCount = 2;
   const clearBtn = $("#clear-rows");
   const calcBtn = $("#calcResult");
   const addRowBtn = $("#add-row");
@@ -46,6 +46,7 @@ $(document).ready(function () {
     const rows = $("#data-table tbody tr");
     if (rows.length > 2) {
       rows.last().remove();
+      rowCount--;
     }
   });
 
@@ -69,26 +70,17 @@ $(document).ready(function () {
 
   calcBtn.on("click", function () {
 
-    let numbers = [];
-    let operators = [];
+    let numbers = [], operators = [];
 
-    if (checkValues(numbers) && numbers.length > 1) {
-
-      $('.operation').each(function () {
-        const selectedOperation = $(this).find("option:selected").text();
-        operators.push(selectedOperation);
-      });
-
+    if (checkValues(numbers, operators) && numbers.length > 1) {
       calcResult(numbers, operators);
-    }
-    else {
-      resultField.val("Ungültige Eingabe(n)").css("border-color", "red");
     }
   });
 
-  function checkValues(numbers) {
+  function checkValues(numbers, operators) {
 
     let isValid = true;
+    resultField.val("").css("border-color", "");
 
     $("#data-table tbody input[type='text']").each(function () {
       const number = $(this).val().trim();
@@ -103,8 +95,8 @@ $(document).ready(function () {
     });
 
     $("#data-table tbody select").each(function () {
-      const number = $(this).val();
-      if (number !== "1") {
+      const operator = $(this).val();
+      if (operator !== "1") {
         $(this).css("border-color", "");
       }
       else {
@@ -113,11 +105,30 @@ $(document).ready(function () {
       }
     });
 
+    tableBody.find('tr').each(function () {
+      let operator = $(this).find('select');
+      let number = $(this).find('input');
+
+      if (operator.val() === '5' && number.val() === '0') {
+        operator.css("border-color", "red");
+        number.css("border-color", "red");
+        isValid = false;
+      }
+    });
+
     if (!isValid) {
       numbers.length = 0; // Clear the array without changing the reference
+      resultField.val("Ungültige Eingabe(n)").css("border-color", "red");
+
+      return false;
     }
 
-    return isValid;
+    $('.operation').each(function () {
+      const selectedOperation = $(this).find("option:selected").text();
+      operators.push(selectedOperation);
+    });
+
+    return true;
   }
 
   function calcResult(numbers, operators) {
@@ -162,9 +173,9 @@ $(document).ready(function () {
       }
     }
 
-    console.log(numbers);
-    console.log(operators);
+    // console.log(numbers);
+    // console.log(operators);
 
-    resultField.val(numbers).css("border-color", "");
+    resultField.val(numbers);
   }
 });
