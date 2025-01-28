@@ -25,7 +25,7 @@ $(document).ready(function () {
       <tr>
         <th scope="row">${rowCount}</th>
         <td>
-          <select id="selectedOperation-${rowCount}" class="form-select" aria-label="Operator">
+          <select class="form-select operation" aria-label="Operator">
             <option value="1" selected="selected">Bitte wählen</option>
             <option value="2">+</option>
             <option value="3">-</option>
@@ -69,25 +69,32 @@ $(document).ready(function () {
 
   calcBtn.on("click", function () {
 
-    let values = [];
+    let numbers = [];
+    let operators = [];
 
-    if (checkValues(values) && values.length > 1) {
-      calcResult(values);
+    if (checkValues(numbers) && numbers.length > 1) {
+
+      $('.operation').each(function () {
+        const selectedOperation = $(this).find("option:selected").text();
+        operators.push(selectedOperation);
+      });
+
+      calcResult(numbers, operators);
     }
     else {
       resultField.val("Ungültige Eingabe(n)").css("border-color", "red");
     }
   });
 
-  function checkValues(values) {
+  function checkValues(numbers) {
 
     let isValid = true;
 
     $("#data-table tbody input[type='text']").each(function () {
-      const value = $(this).val().trim();
-      if ($.isNumeric(value)) {
+      const number = $(this).val().trim();
+      if ($.isNumeric(number)) {
         $(this).css("border-color", "");
-        values.push(value);
+        numbers.push(parseFloat(number));
       }
       else {
         $(this).css("border-color", "red");
@@ -96,8 +103,8 @@ $(document).ready(function () {
     });
 
     $("#data-table tbody select").each(function () {
-      const value = $(this).val();
-      if (value !== "1") {
+      const number = $(this).val();
+      if (number !== "1") {
         $(this).css("border-color", "");
       }
       else {
@@ -107,35 +114,57 @@ $(document).ready(function () {
     });
 
     if (!isValid) {
-      values.length = 0; // Clear the array without changing the reference
+      numbers.length = 0; // Clear the array without changing the reference
     }
 
     return isValid;
   }
 
-  function calcResult(values) {
+  function calcResult(numbers, operators) {
 
-    let result = parseFloat(values[0]);
-    resultField.css("border-color", "");
+    let tmpValue = 0;
+    // let numbers = [2, 3, 1, 6, 1, 2];
+    // let operators = ['*', '*', '+', '*', '*'];
 
-    $("#data-table tbody select").each(function (idx) {
-      const selectedValue = $(this).val();
-      switch (selectedValue) {
-        case '2':
-          result += parseFloat(values[idx + 1]);
-          break;
-        case '3':
-          result -= parseFloat(values[idx + 1]);
-          break;
-        case '4':
-          result *= parseFloat(values[idx + 1]);
-          break;
-        case '5':
-          result /= parseFloat(values[idx + 1]);
-          break;
+    for (let i = 0; i < operators.length; i++) {
+
+      if (operators[i] === '*') {
+        tmpValue = numbers[i] * numbers[i + 1];
+
+        numbers.splice(i, 2, tmpValue);
+        operators.splice(i, 1);
+        i--;
       }
-    });
+      else if (operators[i] === '/') {
+        tmpValue = numbers[i] / numbers[i + 1];
 
-    resultField.val(result);
+        numbers.splice(i, 2, tmpValue);
+        operators.splice(i, 1);
+        i--;
+      }
+    }
+
+    for (let i = 0; i < operators.length; i++) {
+
+      if (operators[i] === '+') {
+        tmpValue = numbers[i] + numbers[i + 1];
+
+        numbers.splice(i, 2, tmpValue);
+        operators.splice(i, 1);
+        i--;
+      }
+      else if (operators[i] === '-') {
+        tmpValue = numbers[i] - numbers[i + 1];
+
+        numbers.splice(i, 2, tmpValue);
+        operators.splice(i, 1);
+        i--;
+      }
+    }
+
+    console.log(numbers);
+    console.log(operators);
+
+    resultField.val(numbers).css("border-color", "");
   }
 });
