@@ -122,7 +122,7 @@ $(document).ready(function () {
       const numberValue = number.val().trim();
 
       // Check if the input is a number and finite
-      if (!isNaN(numberValue) && isFinite(numberValue)) {
+      if (!isNaN(numberValue) && isFinite(numberValue) && numberValue !== '') {
         number.css("border-color", "");
         numbers.push(parseFloat(numberValue));
       }
